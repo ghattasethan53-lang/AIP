@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Axiom</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="toasts" id="toasts"></div>
+
+<div class="bar" id="bar">
+  <div class="bwifi"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 18c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm-4.24-2.76a6 6 0 018.49 0l1.41-1.41a8 8 0 00-11.31 0l1.41 1.41zm-2.83-2.83a10 10 0 0114.14 0l1.41-1.41a12 12 0 00-16.97 0l1.42 1.41z"/></svg></div>
+  <div class="bsrch"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>Search</div>
+  <div class="bicons">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/></svg>
+  </div>
+  <span class="bclk" id="bclk"></span>
+</div>
+
+<div class="auth-wrap" id="auth-wrap">
+
+  <div class="login-box screen active" id="screen-auth">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 21h4l1.8-4h6.4L17 21h4L12 2zm-1.6 11L12 8.6 13.6 13h-3.2z" fill="#fff"/></svg></div>
+    <h1>AXIOM</h1>
+    <div class="tagline">members portal</div>
+
+    <div class="tab-row">
+      <button id="tab-login" class="on" onclick="switchTab('login')">Log in</button>
+      <button id="tab-reg" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <form id="form-login" onsubmit="return doLog(event)">
+      <label>Username</label>
+      <div class="fld"><input id="li-user" autocomplete="username" placeholder="Your username"></div>
+      <label>Password</label>
+      <div class="fld"><input id="li-pass" type="password" autocomplete="current-password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"><button type="button" class="pw-toggle" onclick="peek('li-pass',this)">show</button></div>
+      <button class="go-btn" type="submit">Enter Axiom</button>
+    </form>
+
+    <form id="form-reg" style="display:none" onsubmit="return doReg(event)">
+      <label>Username</label>
+      <div class="fld"><input id="rg-user" autocomplete="username" placeholder="3-20 characters"></div>
+      <label>Password</label>
+      <div class="fld"><input id="rg-pass" type="password" autocomplete="new-password" placeholder="At least 6 characters"><button type="button" class="pw-toggle" onclick="peek('rg-pass',this)">show</button></div>
+      <label>Confirm password</label>
+      <div class="fld"><input id="rg-pass2" type="password" autocomplete="new-password" placeholder="Repeat password"></div>
+      <button class="go-btn" type="submit">Create account</button>
+    </form>
+
+    <div class="msg" id="auth-msg"></div>
+    <div class="note">Owner account <b>coco890</b> skips the whitelist.</div>
+  </div>
+
+  <div class="login-box screen" id="screen-gate">
+    <div class="lock-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 016 0v3H9zm3 4a2 2 0 011 3.7V20h-2v-3.3A2 2 0 0112 13z" fill="#8b7fc8"/></svg></div>
+    <h1 style="font-size:18px;margin-bottom:3px">Whitelist Required</h1>
+    <p style="color:#534f78;font-size:10px;margin-bottom:14px">Hey <b id="gate-name" style="color:#e8e6f0"></b>, you need a key to get in.</p>
+    <form onsubmit="return doWL(event)">
+      <label>Whitelist key</label>
+      <div class="fld"><input id="wl-key" placeholder="AXIOM-XXXXX-XXXXX-XXXXX" style="text-align:center;font-family:Consolas,monospace;letter-spacing:1px;text-transform:uppercase"></div>
+      <button class="go-btn" type="submit">Unlock</button>
+    </form>
+    <div class="msg" id="gate-msg"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <button class="back-link" onclick="logout()">&#8592; Back</button>
+      <span style="font-size:8px;color:#3d3964">Ask coco890 for a key</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="app" id="app">
+  <iframe src="https://science.martinrobertfink.com/windows.html"></iframe>
+</div>
+
+<button class="fab" id="fab" onclick="toggleAdmin()">&#9881;</button>
+<button class="logout-btn" id="logout-btn" style="display:none" onclick="logout()">Log out</button>
+
+<div class="admin" id="admin">
+  <div class="admin-body">
+    <div class="admin-top">
+      <h2>AXIOM <small>owner panel</small></h2>
+      <button class="xbtn" onclick="toggleAdmin()">&times;</button>
+    </div>
+
+    <div class="sec">
+      <h3>Whitelist Keys</h3>
+      <div class="info">Standard keys — one use per account.</div>
+      <div class="kbox" id="k-out">&#8212;</div>
+      <div class="kbtns">
+        <button class="kb" onclick="genKey('standard')">Generate</button>
+        <button class="kb" onclick="cpK()">Copy</button>
+      </div>
+      <div class="klog" id="k-log"></div>
+    </div>
+
+    <div class="sec">
+      <h3 class="gold">Premium Keys</h3>
+      <div class="info">Grants premium status + whitelist on redeem.</div>
+      <div class="kbox gold" id="pk-out">&#8212;</div>
+      <div class="kbtns">
+        <button class="kb gold" onclick="genKey('premium')">Generate Premium</button>
+        <button class="kb gold" onclick="cpPK()">Copy</button>
+      </div>
+      <div class="klog" id="pk-log"></div>
+    </div>
+
+    <div class="sec">
+      <h3>Create Account</h3>
+      <form onsubmit="return adminMk(event)">
+        <label>Username</label>
+        <input type="text" id="ac-user" placeholder="new username">
+        <label>Password</label>
+        <input type="password" id="ac-pass" placeholder="min 6 characters">
+        <label class="chk"><input type="checkbox" id="ac-wl" checked> Whitelist immediately</label>
+        <label class="chk"><input type="checkbox" id="ac-prem"> Premium account</label>
+        <button class="go-btn" type="submit">Create</button>
+      </form>
+      <div class="msg" id="ac-msg"></div>
+    </div>
+
+    <div class="sec">
+      <h3>Accounts</h3>
+      <div id="u-list" style="display:flex;flex-direction:column;gap:3px"></div>
+    </div>
+
+    <div class="creds">
+      <span>Made by <b>Dr.muffinn</b> on Discord</span>
+    </div>
+  </div>
+</div>
+
+<script src="js/bg.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
